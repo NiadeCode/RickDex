@@ -1,14 +1,18 @@
 package com.jruizdev.rickdex.data.repository
 
+import com.jruizdev.rickdex.data.datasource.CharacterDatasource
 import com.jruizdev.rickdex.domain.model.CharacterBO
 import com.jruizdev.rickdex.domain.repository.CharacterRepository
+import javax.inject.Inject
 
-class CharacterRepositoryImpl : CharacterRepository {
+class CharacterRepositoryImpl @Inject constructor(
+    private val datasource: CharacterDatasource
+) : CharacterRepository {
     override suspend fun getCharacters(): List<CharacterBO> {
-        TODO("Not yet implemented")
+        return datasource.getCharacters(1).characters
     }
 
     override suspend fun getCharacter(id: Int): CharacterBO {
-        TODO("Not yet implemented")
+        return datasource.getCharacter(id)
     }
 }
