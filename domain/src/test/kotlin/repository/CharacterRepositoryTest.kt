@@ -1,6 +1,8 @@
 package repository
 
 import com.jruizdev.rickdex.domain.model.CharacterBO
+import com.jruizdev.rickdex.domain.model.CharacterResponseBO
+import com.jruizdev.rickdex.domain.model.InfoBO
 import com.jruizdev.rickdex.domain.repository.CharacterRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -23,13 +25,17 @@ class CharacterRepositoryTest {
     @Test
     fun `should get all characters`() = runTest {
         //1 setup
-        coEvery { repository.getCharacters() } returns mockCharacters
+        val responseBO = CharacterResponseBO(
+            info = InfoBO(pages = 1, next = 2),
+            characters = mockCharacters
+        )
+        coEvery { repository.getCharacters(1) } returns responseBO
         //2 call
-        val result = repository.getCharacters()
+        val result = repository.getCharacters(1)
         //3 verify
-        assertEquals(5, result.size)
-        assertEquals(mockCharacters, result)
-        coVerify(exactly = 1) { repository.getCharacters() }
+        assertEquals(5, result.characters.size)
+        assertEquals(mockCharacters, result.characters)
+        coVerify(exactly = 1) { repository.getCharacters(1) }
     }
 
     @Test

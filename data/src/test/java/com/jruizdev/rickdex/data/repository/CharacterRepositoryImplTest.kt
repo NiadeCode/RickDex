@@ -23,7 +23,7 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun `getCharacters returns list of characters from datasource`() = runTest {
+    fun `getCharacters returns character response from datasource`() = runTest {
         val character = CharacterBO(id = 1, name = "Rick Sanchez")
         val responseBO = CharacterResponseBO(
             info = InfoBO(pages = 1, next = 2),
@@ -32,10 +32,11 @@ class CharacterRepositoryImplTest {
 
         coEvery { datasource.getCharacters(1) } returns responseBO
 
-        val result = repository.getCharacters()
+        val result = repository.getCharacters(1)
 
-        assertEquals(1, result.size)
-        assertEquals("Rick Sanchez", result[0].name)
+        assertEquals(1, result.characters.size)
+        assertEquals("Rick Sanchez", result.characters[0].name)
+        assertEquals(2, result.info.next)
     }
 
     @Test
@@ -53,7 +54,7 @@ class CharacterRepositoryImplTest {
     @Test(expected = RuntimeException::class)
     fun `getCharacters throws exception when datasource fails`() = runTest {
         coEvery { datasource.getCharacters(1) } throws RuntimeException("Datasource error")
-        repository.getCharacters()
+        repository.getCharacters(1)
     }
 
     @Test(expected = RuntimeException::class)
