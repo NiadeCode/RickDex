@@ -3,9 +3,11 @@ package com.jruizdev.rickdex.data.mapper
 import com.jruizdev.rickdex.data.model.CharacterDto
 import com.jruizdev.rickdex.data.model.CharacterResponseDto
 import com.jruizdev.rickdex.data.model.InfoDto
+import com.jruizdev.rickdex.data.model.LocationDto
 import com.jruizdev.rickdex.domain.model.CharacterBO
 import com.jruizdev.rickdex.domain.model.CharacterResponseBO
 import com.jruizdev.rickdex.domain.model.InfoBO
+import com.jruizdev.rickdex.domain.model.OriginBO
 import java.net.URI
 
 fun CharacterResponseDto.mapToBO(): CharacterResponseBO {
@@ -36,6 +38,19 @@ fun CharacterDto.mapToBO(): CharacterBO {
     return CharacterBO(
         id = id,
         name = name,
-        /*TODO*/
+        status = status,
+        species = species,
+        type = type,
+        gender = gender,
+        origin = origin.mapToBO(),
+        image = image,
+        episode = episode,
+    )
+}
+
+fun LocationDto.mapToBO(): OriginBO {
+    return OriginBO(
+        name = name,
+        url = url,
     )
 }

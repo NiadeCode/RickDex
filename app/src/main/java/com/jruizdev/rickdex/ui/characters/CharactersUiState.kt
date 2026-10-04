@@ -1,5 +1,7 @@
 package com.jruizdev.rickdex.ui.characters
 
+import androidx.annotation.StringRes
+
 data class CharactersUiState(
     val isLoading: Boolean = false,
     val characters: List<CharacterVO> = emptyList(),
@@ -9,12 +11,9 @@ data class CharactersUiState(
 )
 
 data class CharacterVO(
-    val id: Int,
-    val name: String,
-    val status: String,
-    val species: String,
-    val type: String,
-    val gender: String,
-    val origin: String,
-    val image: String
+    val id: Int, val fields: List<CharacterFieldVO>, val image: String
+)
+
+data class CharacterFieldVO(
+    @StringRes val title: Int, val value: String
 )
