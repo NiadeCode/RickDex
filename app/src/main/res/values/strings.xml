@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">RickDex</string>
+    <string name="name">Name:</string>
+    <string name="status">Status:</string>
+    <string name="species">Specie:</string>
+    <string name="characters_title">List of characters</string>
+    <string name="search">search</string>
 </resources>

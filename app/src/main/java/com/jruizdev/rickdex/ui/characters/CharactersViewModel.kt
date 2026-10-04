@@ -33,10 +33,19 @@ class CharactersViewModel @Inject constructor(
     )
     val intent: SharedFlow<CharactersIntent> = _intent.asSharedFlow()
 
+     private val _effect = MutableSharedFlow<CharactersEffect>(
+        replay = 0,
+        extraBufferCapacity = 64,
+        onBufferOverflow = kotlinx.coroutines.channels.BufferOverflow.DROP_OLDEST
+    )
+    val effect: SharedFlow<CharactersEffect> = _effect.asSharedFlow()
+
+
+
     private var currentPage = 1
 
     init {
-        viewModelScope.launch() {
+        viewModelScope.launch {
             intent.collect { action ->
                 handleIntent(action)
             }
@@ -67,7 +76,7 @@ class CharactersViewModel @Inject constructor(
             return
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             setLoading()
             getCharactersUseCase(currentPage)
                 .onSuccess { success ->
@@ -92,6 +101,7 @@ class CharactersViewModel @Inject constructor(
             page = success.info.next ?: -1,
             isLoading = false,
             error = null,
+            hasMore = success.info.next != null,
             characters = _state.value.characters + success.characters.map { it.toVO() }
         )
     }
