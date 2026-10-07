@@ -9,7 +9,14 @@ class CharacterDatasourceImpl @Inject constructor(
     private val api: CharactersApi
 ) : CharacterDatasource {
 
-    override suspend fun getCharacters(page: Int): CharacterResponseBO {
+    override suspend fun getCharacters(
+        page: Int,
+        name: String?,
+        status: String?,
+        species: String?,
+        type: String?,
+        gender: String?
+    ): CharacterResponseBO {
         if (page <= 0) {
             throw IllegalArgumentException("Page must be greater than 0")
         }

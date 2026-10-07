@@ -9,7 +9,7 @@ fun CharacterBO.toVO() = CharacterVO(
     id = id,
     fields = listOf(
         CharacterFieldVO(R.string.name, name),
-        CharacterFieldVO(R.string.status, status),
+        CharacterFieldVO(R.string.status, status.name),
         CharacterFieldVO(R.string.species, species),
     ),
     image = image

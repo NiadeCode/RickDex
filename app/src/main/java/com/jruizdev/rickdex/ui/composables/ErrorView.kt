@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,7 +21,7 @@ import com.jruizdev.rickdex.R
 
 @Composable
 fun ErrorView(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier, message: String = "¡Me convertí en un error, Morty!"
 ) {
     Row(
         modifier = modifier.padding(16.dp),
@@ -33,8 +34,10 @@ fun ErrorView(
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.onErrorContainer),
         ) {
             Text(
-                modifier = Modifier.padding(8.dp),
-                text = "¡Me convertí en un \n error, Morty!",
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(0.7F),
+                text = message,
                 color = MaterialTheme.colorScheme.error
             )
         }
@@ -44,7 +47,6 @@ fun ErrorView(
             model = R.drawable.pickle_rick_transparent_edgetrimmed,
             contentDescription = "imagen de error"
         )
-
     }
 }
 

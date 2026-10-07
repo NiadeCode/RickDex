@@ -30,7 +30,7 @@ class CharacterRepositoryImplTest {
             characters = listOf(character)
         )
 
-        coEvery { datasource.getCharacters(1) } returns responseBO
+        coEvery { datasource.getCharacters(1,) } returns responseBO
 
         val result = repository.getCharacters(1)
 
@@ -53,7 +53,7 @@ class CharacterRepositoryImplTest {
 
     @Test(expected = RuntimeException::class)
     fun `getCharacters throws exception when datasource fails`() = runTest {
-        coEvery { datasource.getCharacters(1) } throws RuntimeException("Datasource error")
+        coEvery { datasource.getCharacters(1,) } throws RuntimeException("Datasource error")
         repository.getCharacters(1)
     }
 

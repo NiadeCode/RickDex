@@ -44,7 +44,7 @@ class CharacterDatasourceImplTest {
 
         coEvery { api.getCharacters(1) } returns responseDto
 
-        val result = datasource.getCharacters(1)
+        val result = datasource.getCharacters(1,)
 
         assertEquals(1, result.characters.size)
         assertEquals("Rick Sanchez", result.characters[0].name)
@@ -80,7 +80,7 @@ class CharacterDatasourceImplTest {
     @Test(expected = RuntimeException::class)
     fun `getCharacters throws exception when api fails`() = runTest {
         coEvery { api.getCharacters(1) } throws RuntimeException("Network error")
-        datasource.getCharacters(1)
+        datasource.getCharacters(1,)
     }
 
     @Test(expected = RuntimeException::class)
@@ -91,12 +91,12 @@ class CharacterDatasourceImplTest {
 
     @Test(expected = IllegalArgumentException::class)
     fun `getCharacters throws IllegalArgumentException when page is negative`() = runTest {
-        datasource.getCharacters(-1)
+        datasource.getCharacters(-1,)
     }
 
     @Test(expected = RuntimeException::class)
     fun `getCharacters throws exception when page is out of range`() = runTest {
         coEvery { api.getCharacters(9999) } throws RuntimeException("Out of range")
-        datasource.getCharacters(9999)
+        datasource.getCharacters(9999,)
     }
 }
