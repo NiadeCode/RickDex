@@ -26,6 +26,7 @@ import com.jruizdev.rickdex.ui.composables.LoadingView
 fun CharactersContent(
     characters: LazyPagingItems<CharacterVO>,
     onCharacterClick: (Int) -> Unit,
+    onQueryChange: (String, Boolean) -> Unit
 ) {
 
     Scaffold(
@@ -33,7 +34,7 @@ fun CharactersContent(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
         topBar = {
-            CharactersTopBar()
+            CharactersTopBar(onQueryChange)
         }) { innerPadding ->
 
         LazyColumn(
@@ -54,14 +55,14 @@ fun CharactersContent(
             }
 
             // Handle initial load state (Refresh)
-            when (characters.loadState.refresh) {
+            when (val refreshState = characters.loadState.refresh) {
                 is LoadState.Loading -> {
                     handleLoadStateLoading()
                 }
 
                 is LoadState.Error -> {
                     handleLoadStateError(
-                        error = (characters.loadState.append as LoadState.Error).error,
+                        error = refreshState.error,
                         onRetry = { characters.retry() }
                     )
                 }
@@ -69,15 +70,16 @@ fun CharactersContent(
                 else -> {}
             }
 
-            when (characters.loadState.append) {
+            when (val appendState = characters.loadState.append) {
                 is LoadState.Loading -> {
                     handleLoadStateLoading()
                 }
 
                 is LoadState.Error -> {
                     handleLoadStateError(
-                        error = (characters.loadState.append as LoadState.Error).error,
-                        onRetry = { characters.retry() })
+                        error = appendState.error,
+                        onRetry = { characters.retry() }
+                    )
                 }
 
                 else -> {}

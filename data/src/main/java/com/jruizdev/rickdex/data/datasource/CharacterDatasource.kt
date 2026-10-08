@@ -7,11 +7,11 @@ interface CharacterDatasource {
 
     suspend fun getCharacters(
         page: Int,
-        name: String?,
-        status: String?,
-        species: String?,
-        type: String?,
-        gender: String?
+        name: String? = null,
+        status: String? = null,
+        species: String? = null,
+        type: String? = null,
+        gender: String? = null
     ): CharacterResponseBO
 
     suspend fun getCharacter(id: Int): CharacterBO

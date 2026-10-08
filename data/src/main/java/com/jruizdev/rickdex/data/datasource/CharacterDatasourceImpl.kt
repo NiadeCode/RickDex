@@ -20,7 +20,7 @@ class CharacterDatasourceImpl @Inject constructor(
         if (page <= 0) {
             throw IllegalArgumentException("Page must be greater than 0")
         }
-        val charactersResponse = api.getCharacters(page)
+        val charactersResponse = api.getCharacters(page, name, status, species, type, gender)
         return charactersResponse.mapToBO()
     }
 
