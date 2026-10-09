@@ -6,42 +6,36 @@ import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import coil3.disk.DiskCache
 import coil3.memory.MemoryCache
+import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.util.DebugLogger
+import com.jruizdev.rickdex.data.interceptor.RateLimitRetryInterceptor
 import dagger.hilt.android.HiltAndroidApp
+import okhttp3.OkHttpClient
 import okio.Path.Companion.toOkioPath
 
 @HiltAndroidApp
 class RickDexApplication : Application(), SingletonImageLoader.Factory {
 
     override fun newImageLoader(context: Context): ImageLoader {
-        return ImageLoader.Builder(context)
-            // 1. Activa los logs de Coil en Logcat (busca la etiqueta "Coil")
-
-            .logger(
+        return ImageLoader.Builder(context).logger(
                 if (BuildConfig.DEBUG) {
                     DebugLogger()
                 } else {
                     null
                 }
-            )
-
-            // 2. Personaliza la caché en memoria (ej. usa 25% de la memoria disponible)
-            .memoryCache {
-                MemoryCache.Builder()
-                    .maxSizePercent(context, 0.25)
-                    .build()
-            }
-
-            // 3. Personaliza la caché en disco (ej. 512 MB)
-            .diskCache {
-                DiskCache.Builder()
-                    .directory(context.cacheDir.resolve("image_cache").toOkioPath())
+            ).memoryCache {
+                MemoryCache.Builder().maxSizePercent(context, 0.25).build()
+            }.diskCache {
+                DiskCache.Builder().directory(context.cacheDir.resolve("image_cache").toOkioPath())
                     .maxSizeBytes(512L * 1024 * 1024) // 512 MB
                     .build()
-            }
-
-            // .respectCacheHeaders(false) // No disponible directamente en Coil 3 en el Builder principal
-
-            .build()
+            }.components {
+                add(
+                    OkHttpNetworkFetcherFactory(
+                        OkHttpClient.Builder()
+                            .addInterceptor(RateLimitRetryInterceptor(delayMillis = 5000L)).build()
+                    )
+                )
+            }.build()
     }
 }
