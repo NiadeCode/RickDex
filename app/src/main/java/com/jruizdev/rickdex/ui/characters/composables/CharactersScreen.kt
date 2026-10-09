@@ -27,7 +27,12 @@ fun CharactersScreen(
     }
 
     CharactersContent(
-        characters = characters, onCharacterClick = { characterId ->
+        characters = characters,
+        onCharacterClick = { characterId ->
             viewModel.sendIntent(CharactersIntent.NavigateToCharacterDetails(characterId))
-        })
+        },
+        onQueryChange = { query, force ->
+            viewModel.sendIntent(CharactersIntent.UpdateQuery(query, force))
+        },
+    )
 }
