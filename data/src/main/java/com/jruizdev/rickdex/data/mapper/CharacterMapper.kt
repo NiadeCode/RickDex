@@ -1,5 +1,7 @@
 package com.jruizdev.rickdex.data.mapper
 
+import com.jruizdev.rickdex.data.database.entity.CharacterEntity
+import com.jruizdev.rickdex.data.database.entity.LocationEntity
 import com.jruizdev.rickdex.data.model.CharacterDto
 import com.jruizdev.rickdex.data.model.CharacterResponseDto
 import com.jruizdev.rickdex.data.model.InfoDto
@@ -49,17 +51,55 @@ fun CharacterDto.mapToBO(): CharacterBO {
     )
 }
 
+fun CharacterDto.mapToEntity(): CharacterEntity {
+    return CharacterEntity(
+        id = id,
+        name = name,
+        status = status,
+        species = species,
+        type = type,
+        gender = gender,
+        origin = origin.mapToEntity(),
+        location = location.mapToEntity(),
+        image = image,
+        episodes = episode.joinToString(","),
+        url = url,
+        created = created
+    )
+}
+
+fun CharacterEntity.mapToBO(): CharacterBO {
+    return CharacterBO(
+        id = id,
+        name = name,
+        status = status.toStatus(),
+        species = species,
+        type = type,
+        gender = gender.toGender(),
+        origin = OriginBO(name = origin.name, url = origin.url),
+        image = image,
+        episode = if (episodes.isBlank()) emptyList() else episodes.split(","),
+    )
+}
+
+fun LocationDto.mapToEntity(): LocationEntity {
+    return LocationEntity(
+        name = name,
+        url = url
+    )
+}
+
 private fun String.toStatus(): StatusBO = when (this.lowercase()) {
     "alive" -> StatusBO.ALIVE
     "dead" -> StatusBO.DEAD
-    else -> StatusBO.UNKNOWN // Valor por defecto si la API cambia o falla
+    else -> StatusBO.UNKNOWN
 }
 
 private fun String.toGender(): GenderBO = when (this.lowercase()) {
     "female" -> GenderBO.FEMALE
-    "dead" -> GenderBO.MALE
+    "male" -> GenderBO.MALE
     "genderless" -> GenderBO.GENDERLESS
-    else -> GenderBO.UNKNOWN // Valor por defecto si la API cambia o falla
+    else -> GenderBO.UNKNOWN
 }
 
 fun LocationDto.mapToBO(): OriginBO {

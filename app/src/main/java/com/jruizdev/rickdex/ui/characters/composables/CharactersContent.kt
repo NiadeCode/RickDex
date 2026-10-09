@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 import com.jruizdev.rickdex.domain.exception.RateLimitException
 import com.jruizdev.rickdex.ui.characters.CharacterVO
 import com.jruizdev.rickdex.ui.composables.ErrorView
@@ -44,7 +45,8 @@ fun CharactersContent(
         ) {
             items(
                 count = characters.itemCount,
-                key = { index -> characters[index]?.id ?: index }) { index ->
+                key = characters.itemKey { it.id }
+            ) { index ->
                 val character = characters[index]
                 if (character != null) {
                     CharacterListRow(character = character, onCharacterClick = onCharacterClick)

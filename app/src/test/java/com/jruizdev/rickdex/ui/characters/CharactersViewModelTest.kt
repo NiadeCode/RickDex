@@ -1,54 +1,36 @@
 package com.jruizdev.rickdex.ui.characters
 
+import androidx.paging.PagingData
 import com.jruizdev.rickdex.domain.GetCharactersUseCase
-import com.jruizdev.rickdex.domain.model.CharacterResponseBO
-import com.jruizdev.rickdex.domain.model.InfoBO
-import com.jruizdev.rickdex.domain.repository.CharacterRepository
-import io.mockk.coEvery
+import com.jruizdev.rickdex.domain.model.CharacterBO
+import io.mockk.every
 import io.mockk.mockk
-import junit.framework.TestCase.assertEquals
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CharactersViewModelTest {
+
     private lateinit var viewModel: CharactersViewModel
     private lateinit var getCharactersUseCase: GetCharactersUseCase
-    private lateinit var characterRepository: CharacterRepository
-
     private val testDispatcher = StandardTestDispatcher()
-
-    private val characterResponseBO1: CharacterResponseBO = CharacterResponseBO(
-        info = InfoBO(
-            pages = 3,
-            next = 2,
-        ), characters = emptyList()
-    )
-    private val characterResponseBO2: CharacterResponseBO = CharacterResponseBO(
-        info = InfoBO(
-            pages = 3,
-            next = 3,
-        ), characters = emptyList()
-    )
-    private val characterResponseBO3: CharacterResponseBO = CharacterResponseBO(
-        info = InfoBO(
-            pages = 3,
-            next = null,
-        ), characters = emptyList()
-    )
-    private val characterVOList: List<CharacterVO> = emptyList()
 
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        characterRepository = mockk()
         getCharactersUseCase = mockk()
     }
 
@@ -58,38 +40,56 @@ class CharactersViewModelTest {
     }
 
     @Test
-    fun `test loadCharacters success`() = runTest(testDispatcher) {
-        coEvery { getCharactersUseCase(1) } returns Result.success(characterResponseBO1)
+    fun `test characters flow emits paging data`() = runTest(testDispatcher) {
+        val characterBO = CharacterBO(id = 1, name = "Rick Sanchez")
+        val pagingData = PagingData.from(listOf(characterBO))
+
+        every { getCharactersUseCase(name = any()) } returns flowOf(pagingData)
 
         viewModel = CharactersViewModel(getCharactersUseCase)
         testDispatcher.scheduler.advanceUntilIdle()
 
-        assertEquals(characterVOList, viewModel.state.value.characters)
-        assertEquals(false, viewModel.state.value.isLoading)
-        assertEquals(null, viewModel.state.value.error)
-        assertEquals(2, viewModel.state.value.page)
+        val resultPagingData = viewModel.characters.first()
+        assertNotNull(resultPagingData)
     }
 
     @Test
-    fun `test load more loadCharacters success`() = runTest(testDispatcher) {
-        coEvery { getCharactersUseCase(1) } returns Result.success(characterResponseBO1)
-        coEvery { getCharactersUseCase(2) } returns Result.success(characterResponseBO2)
-        coEvery { getCharactersUseCase(3) } returns Result.success(characterResponseBO3)
+    fun `test NavigateToCharacterDetails intent emits NavigateToDetail effect`() = runTest(testDispatcher) {
+        every { getCharactersUseCase(name = any()) } returns flowOf(PagingData.empty())
 
         viewModel = CharactersViewModel(getCharactersUseCase)
-        testDispatcher.scheduler.advanceUntilIdle()
-        assertEquals(2, viewModel.state.value.page)
 
-        viewModel.sendIntent(CharactersIntent.LoadCharacters)
-        testDispatcher.scheduler.advanceUntilIdle()
-        assertEquals(3, viewModel.state.value.page)
+        var emittedEffect: CharactersEffect? = null
+        val job = launch {
+            viewModel.effect.collect { effect ->
+                emittedEffect = effect
+            }
+        }
 
-        viewModel.sendIntent(CharactersIntent.LoadCharacters)
+        viewModel.sendIntent(CharactersIntent.NavigateToCharacterDetails(characterId = 42))
         testDispatcher.scheduler.advanceUntilIdle()
-        assertEquals(-1, viewModel.state.value.page)
 
-        assertEquals(characterVOList, viewModel.state.value.characters)
-        assertEquals(false, viewModel.state.value.isLoading)
-        assertEquals(null, viewModel.state.value.error)
+        assertNotNull(emittedEffect)
+        assertEquals(CharactersEffect.NavigateToDetail(42), emittedEffect)
+
+        job.cancel()
+    }
+
+    @Test
+    fun `test UpdateQuery intent calls getCharactersUseCase with query`() = runTest(testDispatcher) {
+        every { getCharactersUseCase(name = any()) } returns flowOf(PagingData.empty())
+
+        viewModel = CharactersViewModel(getCharactersUseCase)
+
+        val job = launch {
+            viewModel.characters.collect {}
+        }
+
+        viewModel.sendIntent(CharactersIntent.UpdateQuery(query = "Rick", force = true))
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        verify { getCharactersUseCase(name = "Rick") }
+
+        job.cancel()
     }
 }
