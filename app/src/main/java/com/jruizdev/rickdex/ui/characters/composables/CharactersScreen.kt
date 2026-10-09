@@ -2,10 +2,9 @@ package com.jruizdev.rickdex.ui.characters.composables
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.jruizdev.rickdex.ui.characters.CharactersEffect
 import com.jruizdev.rickdex.ui.characters.CharactersIntent
 import com.jruizdev.rickdex.ui.characters.CharactersViewModel
@@ -15,7 +14,7 @@ fun CharactersScreen(
     viewModel: CharactersViewModel = hiltViewModel<CharactersViewModel>(),
     navController: NavController
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val characters = viewModel.characters.collectAsLazyPagingItems()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.effect.collect { effect ->
@@ -27,14 +26,8 @@ fun CharactersScreen(
         }
     }
 
-
     CharactersContent(
-        state = state, onCharacterClick = { characterId ->
-            // El usuario hace clic -> Enviamos el intent
+        characters = characters, onCharacterClick = { characterId ->
             viewModel.sendIntent(CharactersIntent.NavigateToCharacterDetails(characterId))
         })
 }
-
-
-
-
