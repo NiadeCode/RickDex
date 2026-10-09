@@ -1,6 +1,10 @@
 package com.jruizdev.rickdex.data.repository
 
+import com.jruizdev.rickdex.data.database.CharacterCacheValidator
+import com.jruizdev.rickdex.data.database.RickDexDatabase
+import com.jruizdev.rickdex.data.database.dao.CharacterDao
 import com.jruizdev.rickdex.data.datasource.CharacterDatasource
+import com.jruizdev.rickdex.data.datasource.CharactersApi
 import com.jruizdev.rickdex.domain.model.CharacterBO
 import com.jruizdev.rickdex.domain.model.CharacterResponseBO
 import com.jruizdev.rickdex.domain.model.InfoBO
@@ -14,12 +18,20 @@ import org.junit.Test
 class CharacterRepositoryImplTest {
 
     private lateinit var datasource: CharacterDatasource
+    private lateinit var api: CharactersApi
+    private lateinit var database: RickDexDatabase
+    private lateinit var dao: CharacterDao
+    private lateinit var cacheValidator: CharacterCacheValidator
     private lateinit var repository: CharacterRepositoryImpl
 
     @Before
     fun setUp() {
         datasource = mockk()
-        repository = CharacterRepositoryImpl(datasource)
+        api = mockk()
+        database = mockk()
+        dao = mockk()
+        cacheValidator = mockk(relaxed = true)
+        repository = CharacterRepositoryImpl(datasource, api, database, dao, cacheValidator)
     }
 
     @Test
@@ -30,7 +42,7 @@ class CharacterRepositoryImplTest {
             characters = listOf(character)
         )
 
-        coEvery { datasource.getCharacters(1,) } returns responseBO
+        coEvery { datasource.getCharacters(1) } returns responseBO
 
         val result = repository.getCharacters(1)
 
@@ -53,7 +65,7 @@ class CharacterRepositoryImplTest {
 
     @Test(expected = RuntimeException::class)
     fun `getCharacters throws exception when datasource fails`() = runTest {
-        coEvery { datasource.getCharacters(1,) } throws RuntimeException("Datasource error")
+        coEvery { datasource.getCharacters(1) } throws RuntimeException("Datasource error")
         repository.getCharacters(1)
     }
 
