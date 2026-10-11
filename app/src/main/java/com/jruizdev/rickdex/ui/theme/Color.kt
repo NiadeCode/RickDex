@@ -32,6 +32,8 @@ val backgroundWine = Color(0xFF270d18)
 
 val pinkVibrantAccent = Color(0xFFe5007e)
 
+val brown = Color(0xFF8A6114)
+
 // Light Theme
 val SciFiBackgroundLight = Color(0xFFF3F3F3)
 val SciFiSurfaceLight = Color(0xFFFFFFFF)
