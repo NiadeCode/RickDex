@@ -33,10 +33,11 @@ class CharacterRemoteMediator(
         loadType: LoadType,
         state: PagingState<Int, CharacterEntity>
     ): MediatorResult {
+        val hasNoFilter = name.isNullOrBlank() && status.isNullOrBlank() &&
+                species.isNullOrBlank() && type.isNullOrBlank() && gender.isNullOrBlank()
+
         val page = when (loadType) {
             LoadType.REFRESH -> {
-                val hasNoFilter = name.isNullOrBlank() && status.isNullOrBlank() &&
-                        species.isNullOrBlank() && type.isNullOrBlank() && gender.isNullOrBlank()
                 val isCacheValid = !cacheValidator.isCacheExpired(timeoutHours = 24)
                 val hasDataInDb = database.characterDao().getCharacterCount() > 0
 
@@ -103,9 +104,14 @@ class CharacterRemoteMediator(
                     )
                 }
 
-                    database.characterRemoteKeysDao().insertAll(keys)
+                database.characterRemoteKeysDao().insertAll(keys)
                 database.characterDao().insertCharacters(response.results.map { it.mapToEntity() })
-                cacheValidator.updateLastUpdatedTime()
+                
+                if (hasNoFilter) {
+                    cacheValidator.updateLastUpdatedTime()
+                } else {
+                    cacheValidator.clearCacheTime()
+                }
             }
 
             MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
