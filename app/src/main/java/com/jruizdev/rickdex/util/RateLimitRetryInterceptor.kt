@@ -1,4 +1,4 @@
-package com.jruizdev.rickdex.data.interceptor
+package com.jruizdev.rickdex.util
 
 import okhttp3.Interceptor
 import okhttp3.Response
