@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 private val DarkColorScheme = darkColorScheme(
     primary = yellowToolbar,
     onPrimary = pinkVibrantAccent,
-    primaryContainer = Color(0xFF2B4D00),
+    primaryContainer = brown,
     onPrimaryContainer = PortalGreenBright,
     secondary = RickCyan,
     onSecondary = Color(0xFF00363D),
