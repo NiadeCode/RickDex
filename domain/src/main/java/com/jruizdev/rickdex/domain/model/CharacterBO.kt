@@ -8,6 +8,7 @@ data class CharacterBO(
     val type: String = "",
     val gender: GenderBO = GenderBO.UNKNOWN,
     val origin: OriginBO = OriginBO(),
+    val location: OriginBO = OriginBO(),
     val image: String = "",
     val episode: List<String> = emptyList(),
 )
