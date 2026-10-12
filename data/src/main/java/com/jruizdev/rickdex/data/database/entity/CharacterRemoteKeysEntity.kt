@@ -1,0 +1,12 @@
+package com.jruizdev.rickdex.data.database.entity
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "character_remote_keys")
+data class CharacterRemoteKeysEntity(
+    @PrimaryKey
+    val characterId: Int,
+    val prevKey: Int?,
+    val nextKey: Int?
+)
