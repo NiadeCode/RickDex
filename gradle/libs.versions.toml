@@ -9,7 +9,7 @@ espressoCore = "3.7.0"
 kotlinxCoroutinesCore = "1.11.0"
 kotlinxCoroutinesTest = "1.11.0"
 kotlinxSerializationJson = "1.12.0-RC"
-kotlinxSerializationPlugin = "2.3.20"
+kotlinxSerializationPlugin = "2.4.20"
 lifecycleRuntimeKtx = "2.11.0"
 activityCompose = "1.13.0"
 kotlin = "2.4.20"
@@ -22,6 +22,7 @@ ksp = "2.0.21-1.0.26"
 javaxInject = "1"
 mockkJvm = "1.14.11"
 material3 = "1.4.0"
+navigationCompose = "2.10.2"
 pagingCommon = "3.4.2"
 retrofitVersion = "3.0.0"
 loggingInterceptor = "5.5.0"
@@ -31,6 +32,7 @@ room = "2.8.5"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "pagingCommon" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingCommon" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }

@@ -18,7 +18,7 @@ import com.jruizdev.rickdex.ui.composables.LoadingView
 @Composable
 fun CharacterDetailScreen(
     viewModel: CharacterDetailViewModel = hiltViewModel<CharacterDetailViewModel>(),
-    navController: NavController
+    onBack: () -> Boolean
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -26,7 +26,7 @@ fun CharacterDetailScreen(
         modifier = Modifier.fillMaxSize(), topBar = {
             CharacterDetailTopBar(
                 modifier = Modifier,
-                navController = navController,
+                onBack = onBack,
             )
         }) { innerPadding ->
         when (val sureState = state) {

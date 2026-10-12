@@ -4,9 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.navigation.compose.rememberNavController
-import com.jruizdev.rickdex.ui.character_detail.composables.CharacterDetailScreen
-import com.jruizdev.rickdex.ui.characters.composables.CharactersScreen
+import com.jruizdev.rickdex.ui.nav.AppNavigation
 import com.jruizdev.rickdex.ui.theme.RickDexTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,8 +16,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RickDexTheme {
-                val navController = rememberNavController()
-                CharacterDetailScreen(navController = navController)
+                AppNavigation()
             }
         }
     }
