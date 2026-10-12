@@ -46,8 +46,9 @@ fun CharacterDto.mapToBO(): CharacterBO {
         type = type,
         gender = gender.toGender(),
         origin = origin.mapToBO(),
+        location = location.mapToBO(),
         image = image,
-        episode = episode,
+        episode = episode.map { it.substringAfterLast('/') },
     )
 }
 
@@ -62,7 +63,7 @@ fun CharacterDto.mapToEntity(): CharacterEntity {
         origin = origin.mapToEntity(),
         location = location.mapToEntity(),
         image = image,
-        episodes = episode.joinToString(","),
+        episodes = episode.joinToString(",") { it.substringAfterLast('/') },
         url = url,
         created = created
     )
