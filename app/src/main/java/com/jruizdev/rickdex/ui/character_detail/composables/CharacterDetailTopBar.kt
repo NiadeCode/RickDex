@@ -19,7 +19,7 @@ import com.jruizdev.rickdex.R
 @Composable
 fun CharacterDetailTopBar(
     modifier: Modifier = Modifier,
-    navController: NavController,
+    onBack: () -> Boolean,
 ) {
     TopAppBar(
         modifier = modifier,
@@ -35,7 +35,7 @@ fun CharacterDetailTopBar(
             navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
         ),
         navigationIcon = {
-            IconButton(onClick = { navController.popBackStack() }) {
+            IconButton(onClick = { onBack() }) {
                 Icon(
                     painterResource(R.drawable.outline_arrow_back_24),
                     contentDescription = stringResource(R.string.back)

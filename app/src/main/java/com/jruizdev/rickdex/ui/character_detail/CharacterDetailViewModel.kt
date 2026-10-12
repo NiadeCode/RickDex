@@ -1,5 +1,6 @@
 package com.jruizdev.rickdex.ui.character_detail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jruizdev.rickdex.domain.GetCharacterDetailUseCase
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CharacterDetailViewModel @Inject constructor(
     private val getCharacterDetailUseCase: GetCharacterDetailUseCase,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     suspend fun getCharacter(id: Int) = getCharacterDetailUseCase(id)
@@ -31,6 +33,11 @@ class CharacterDetailViewModel @Inject constructor(
         viewModelScope.launch {
             intent.collect { action ->
                 handleIntent(action)
+            }
+        }
+        savedStateHandle.get<String>("itemId")?.let {
+            viewModelScope.launch {
+                _intent.emit(CharacterDetailIntent.GetCharacter(it.toInt()))
             }
         }
     }

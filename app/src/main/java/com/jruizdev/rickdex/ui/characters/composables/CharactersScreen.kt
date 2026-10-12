@@ -12,7 +12,7 @@ import com.jruizdev.rickdex.ui.characters.CharactersViewModel
 @Composable
 fun CharactersScreen(
     viewModel: CharactersViewModel = hiltViewModel<CharactersViewModel>(),
-    navController: NavController
+    onNavigateToDetail: (Int) -> Unit,
 ) {
     val characters = viewModel.characters.collectAsLazyPagingItems()
 
@@ -20,7 +20,7 @@ fun CharactersScreen(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is CharactersEffect.NavigateToDetail -> {
-                    navController.navigate("character_detail/${effect.characterId}")
+                    onNavigateToDetail(effect.characterId)
                 }
             }
         }
