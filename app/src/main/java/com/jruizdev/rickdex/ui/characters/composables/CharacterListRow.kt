@@ -29,7 +29,7 @@ fun CharacterListRow(character: CharacterVO, onCharacterClick: (Int) -> Unit) {
         )
         Column {
             character.fields.forEach { field ->
-                CharacterListText(characterFieldVO = field)
+                CharacterListText(title = field.title, value = field.value)
             }
         }
 
