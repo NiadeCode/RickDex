@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.jruizdev.rickdex.ui.character_detail.CharacterDetailUiState
@@ -45,7 +46,7 @@ fun CharacterDetailScreen(
 
             is CharacterDetailUiState.Success -> {
                 CharacterDetailContent(
-                    modifier = Modifier.padding(innerPadding),
+                    modifier = Modifier.padding(start = 16.dp, top = innerPadding.calculateTopPadding(), end = 16.dp, bottom = innerPadding.calculateBottomPadding()),
                     character = sureState.character,
                 )
             }

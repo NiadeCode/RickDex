@@ -32,9 +32,7 @@ fun CharacterDetailContent(
             .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
     ) {
-        Row(
-            Modifier.padding(16.dp)
-        ) {
+        Row {
             ImageWithBorder(
                 modifier = Modifier
                     .size(125.dp)
