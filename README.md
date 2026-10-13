@@ -5,6 +5,7 @@
 [![Clean Architecture](https://img.shields.io/badge/Architecture-Clean-green.svg)](https://developer.android.com/topic/architecture)
 [![Hilt](https://img.shields.io/badge/DI-Hilt-orange.svg)](https://dagger.dev/hilt/)
 [![Room](https://img.shields.io/badge/Database-Room-brightgreen.svg)](https://developer.android.com/topic/libraries/data-store/index.html)
+[![Android CI](https://github.com/NiadeCode/RickDex/actions/workflows/android_ci.yml/badge.svg)](https://github.com/NiadeCode/RickDex/actions/workflows/android_ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
@@ -55,7 +56,7 @@ The project is designed to build out of the box upon cloning, requiring no exter
 3. Sync the project with Gradle files.
 4. Run the app on your emulator or physical device (`./gradlew assembleDebug`).
 
-> 💡 **Development Note:** We will soon add **GitHub Actions** CI workflows to automate builds and test suites on pull requests.
+> 💡 **CI/CD:** Automated builds and unit tests are configured via **GitHub Actions** (`.github/workflows/android_ci.yml`).
 
 ---
 
@@ -101,7 +102,7 @@ El proyecto está configurado para compilar directamente al clonar el repositori
 3. Sincroniza el proyecto con Gradle.
 4. Ejecuta la aplicación en tu emulador o dispositivo físico (`./gradlew assembleDebug`).
 
-> 💡 **Nota de Desarrollo:** Próximamente añadiremos integración continua con **GitHub Actions** para automatizar la compilación y pruebas en cada PR.
+> 💡 **CI/CD:** La integración continua para compilación automática y ejecución de pruebas unitarias está configurada mediante **GitHub Actions** (`.github/workflows/android_ci.yml`).
 
 ---
 
