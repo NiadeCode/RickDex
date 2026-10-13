@@ -16,8 +16,8 @@ android {
         applicationId = "com.jruizdev.rickdex"
         minSdk = 24
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -26,13 +26,51 @@ android {
         unitTests.isReturnDefaultValues = true
     }
 
-    buildTypes {
-        release {
-            optimization {
-                enable = false
+    signingConfigs {
+        create("release") {
+            val keystoreFile = file("release-key.jks")
+            if (keystoreFile.exists()) {
+                storeFile = keystoreFile
+                storePassword = System.getenv("SIGNING_STORE_PASSWORD") ?: ""
+                keyAlias = System.getenv("SIGNING_KEY_ALIAS") ?: ""
+                keyPassword = System.getenv("SIGNING_KEY_PASSWORD") ?: ""
             }
         }
     }
+
+    buildTypes {
+        release {
+            optimization {
+                enable = true
+            }
+            isMinifyEnabled = true
+            isShrinkResources = true
+            val keystoreFile = file("release-key.jks")
+            if (keystoreFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            } else {
+                signingConfig = signingConfigs.getByName("debug")
+            }        }
+    }
+
+    val appVersionName = defaultConfig.versionName ?: "1.0"
+    val buildDir = layout.buildDirectory
+
+    for (buildType in listOf("release", "debug")) {
+        val capitalizedBuildType = buildType.replaceFirstChar { char -> char.uppercase() }
+        tasks.matching { it.name == "assemble$capitalizedBuildType" }.configureEach {
+            val outputDirProvider = buildDir.dir("outputs/apk/$buildType")
+            doLast {
+                val outputDir = outputDirProvider.get().asFile
+                val oldFile = File(outputDir, "app-$buildType.apk")
+                val newFile = File(outputDir, "rickdex-$appVersionName-$buildType.apk")
+                if (oldFile.exists()) {
+                    oldFile.copyTo(newFile, overwrite = true)
+                }
+            }
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
