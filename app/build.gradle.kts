@@ -52,6 +52,25 @@ android {
                 signingConfig = signingConfigs.getByName("debug")
             }        }
     }
+
+    val appVersionName = defaultConfig.versionName ?: "1.0"
+    val buildDir = layout.buildDirectory
+
+    for (buildType in listOf("release", "debug")) {
+        val capitalizedBuildType = buildType.replaceFirstChar { char -> char.uppercase() }
+        tasks.matching { it.name == "assemble$capitalizedBuildType" }.configureEach {
+            val outputDirProvider = buildDir.dir("outputs/apk/$buildType")
+            doLast {
+                val outputDir = outputDirProvider.get().asFile
+                val oldFile = File(outputDir, "app-$buildType.apk")
+                val newFile = File(outputDir, "rickdex-$appVersionName-$buildType.apk")
+                if (oldFile.exists()) {
+                    oldFile.copyTo(newFile, overwrite = true)
+                }
+            }
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
