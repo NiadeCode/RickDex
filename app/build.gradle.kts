@@ -58,14 +58,24 @@ android {
 
     for (buildType in listOf("release", "debug")) {
         val capitalizedBuildType = buildType.replaceFirstChar { char -> char.uppercase() }
-        tasks.matching { it.name == "assemble$capitalizedBuildType" }.configureEach {
-            val outputDirProvider = buildDir.dir("outputs/apk/$buildType")
-            doLast {
-                val outputDir = outputDirProvider.get().asFile
-                val oldFile = File(outputDir, "app-$buildType.apk")
-                val newFile = File(outputDir, "rickdex-$appVersionName-$buildType.apk")
-                if (oldFile.exists()) {
-                    oldFile.copyTo(newFile, overwrite = true)
+        
+        for ((taskPrefix, folder, ext) in listOf(
+            Triple("assemble", "apk", "apk"),
+            Triple("bundle", "bundle", "aab")
+        )) {
+            tasks.matching { it.name == "$taskPrefix$capitalizedBuildType" }.configureEach {
+                val outputDirProvider = buildDir.dir("outputs/$folder/$buildType")
+                doLast {
+                    val outputDir = outputDirProvider.get().asFile
+                    val possibleNames = listOf("app-$buildType.$ext", "app.$ext")
+                    for (name in possibleNames) {
+                        val oldFile = File(outputDir, name)
+                        val newFile = File(outputDir, "rickdex-$appVersionName-$buildType.$ext")
+                        if (oldFile.exists()) {
+                            oldFile.copyTo(newFile, overwrite = true)
+                            break
+                        }
+                    }
                 }
             }
         }
